@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     //vars
     private String TAG = "rxjava";
-    private CompositeDisposable disposable = new CompositeDisposable(); //helps to keep track of all the observers we are using,
+    private CompositeDisposable disposables = new CompositeDisposable(); //helps to keep track of all the observers we are using,
                                                                         //to clean them up when they are not needed
 
     @Override
@@ -31,8 +31,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        tv_1.setText("KEKito");
-        //tv_1.setText("HOLA");
+        tv_1.setText("andreia");
 
         Observable<Task> taskObservable = Observable // create a new Observable object
                 .fromIterable(DataSource.createTasksList()) // apply 'fromIterable' operator
@@ -58,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSubscribe(Disposable d) {
                 Log.d(TAG,"onSubscribe: called.");
+                disposables.add(d);
             }
 
 
@@ -78,5 +78,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG,"onComplete: called.");
             }
         });
+    }
+
+    @Override //ctrl-o
+    protected void onDestroy() {
+        super.onDestroy();
+        disposables.clear();
     }
 }
